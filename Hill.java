@@ -3,9 +3,9 @@ import java.util.Scanner;
 class Hill{
     public static void main(String args[]){
         Scanner sc=new Scanner(System.in);
-        System.out.print("Enter Plain Text in even=");
+        System.out.print("Enter Plain Text: ");
         String plainText=sc.next();
-        System.out.print("Enter key =");
+        System.out.print("Enter key : ");
         String key = sc.next();
                 
        String cipherText = encrypt(plainText,key);
@@ -14,7 +14,7 @@ class Hill{
        System.out.print("Enter key Inverse =");
          key = sc.next();
         String decPlainText = decrypt(cipherText,key);
-        System.out.println("Decrypt PlainText = "+decPlainText);
+        System.out.println("Decrypted PlainText = "+decPlainText);
     
     }
 
