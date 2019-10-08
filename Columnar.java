@@ -1,64 +1,152 @@
-import java.util.*;
-
-class Columnar
+import java.io.*;
+public class Columnar
 {
-	public static void main(String a[])
-	{
-		int l=a[0].length()/a[1].length();
-		if(a[0].length()%a[1].length()!=0)
-			l++;
-		char[][] tmp=new char[l][a[1].length()];
-		char[] strArr=a[0].toCharArray();
-		int i=0;
-		System.out.println("Enter 1 for encryption\nEnter 2 for decryption");
-		Scanner s=new Scanner(System.in);
-		int c=s.nextInt();
-		int d,m,n;
-		StringBuffer ans=new StringBuffer();
-		if(c==1)
-		{
-			for(m=0;m<l;m++)
-			{
-				for(n=0;n<a[1].length();n++)
-				{
-					if(i<strArr.length)
-						tmp[m][n]=strArr[i++];
-					else
-						tmp[m][n]='-';
-				}
-			}
-			for(i=1;i<=a[1].length();i++)
-			{
-				d=a[1].indexOf((char)(i+'0'));
-				for(int j=0;j<l;j++)
-				{
-					ans.append(Character.toString(tmp[j][d]));
-				}
-			}
-			System.out.println("Encrypted Text: "+ans);
-		}
-		else
-		{
-			m=0;
-			for(i=1;i<=a[1].length();i++)
-			{
-				d=a[1].indexOf((char)(i+'0'));
-				for(int j=0;j<l;j++)
-				{
-					tmp[j][d]=strArr[m++];
-				}
-			}
-			for(n=0;n<l;n++)
-			{
-				for(m=0;m<a[1].length();m++)
-				{
-					if(tmp[n][m]=='-')
-						break;
-					else
-						ans.append(tmp[n][m]);
-				}
-			}
-			System.out.println("Decrypted Text: "+ans);
-		}
-	}
+char arr[][],encrypt[][],decrypt[][],keya[],keytemp[];
+public void creatematrixE(String s,String key,int row,int column)
+{
+arr=new char[row][column];
+int k=0;
+keya=key.toCharArray();
+for(int i=0;i<row;i++)
+{
+for(int j=0;j<column;j++)
+{
+if(k<s.length())
+{
+arr[i][j]=s.charAt(k);
+k++;
+}
+else
+{
+arr[i][j]=' ';
+}
+}
+}
+}
+public void createkey(String key,int column)
+{
+keytemp=key.toCharArray();
+for(int i=0;i<column-1;i++)
+{
+for(int j=i+1;j<column;j++)
+{
+if(keytemp[i]>keytemp[j])
+{
+char temp=keytemp[i];
+keytemp[i]=keytemp[j];
+keytemp[j]=temp;
+}
+}
+}
+}
+public void creatematrixD(String s,String key,int row,int column)
+{
+arr=new char[row][column];
+int k=0;
+keya=key.toCharArray();
+for(int i=0;i<column;i++)
+{
+for(int j=0;j<row;j++)
+{
+if(k<s.length())
+{
+arr[j][i]=s.charAt(k);
+k++;
+}
+else
+{
+arr[j][i]=' ';
+}
+}
+}
+}
+public void encrypt(int row,int column)
+{
+encrypt=new char[row][column];
+for(int i=0;i<column;i++)
+{
+for(int j=0;j<column;j++)
+{
+if(keya[i]==keytemp[j])
+{
+for(int k=0;k<row;k++)
+{
+encrypt[k][j]=arr[k][i];
+}
+keytemp[j]='?';
+break;
+}
+}
+}
+}
+public void decrypt(int row,int column)
+{
+decrypt=new char[row][column];
+for(int i=0;i<column;i++)
+{
+for(int j=0;j<column;j++)
+{
+if(keya[j]==keytemp[i])
+{
+for(int k=0;k<row;k++)
+{
+decrypt[k][j]=arr[k][i];
+}
+keya[j]='?';
+break;
+}
+}
+}
+}
+public void resultE(int row,int column,char arr[][])
+{
+System.out.println("Result:");
+for(int i=0;i<column;i++)
+{
+for(int j=0;j<row;j++)
+{
+System.out.print(arr[j][i]);
+}
+}
+}
+public void resultD(int row,int column,char arr[][])
+{
+System.out.println("Result:");
+for(int i=0;i<row;i++)
+{
+for(int j=0;j<column;j++)
+{
+System.out.print(arr[i][j]);
+}
+}
+}
+public static void main(String args[])throws IOException
+{
+int row,column,choice;
+Columnar obj=new Columnar();
+BufferedReader in=new BufferedReader(new InputStreamReader(System.in));
+System.out.println("Menu:\n1) Encryption\n2) Decryption");
+choice=Integer.parseInt(in.readLine());
+System.out.println("Enter the string:");
+String s=in.readLine();
+System.out.println("Enter the key:");
+String key=in.readLine();
+row=s.length()/key.length();
+if(s.length()%key.length()!=0)
+row++;
+column=key.length();
+switch(choice)
+{
+case 1: obj.creatematrixE(s,key,row,column);
+obj.createkey(key,column);
+obj.encrypt(row,column);
+obj.resultE(row,column,obj.encrypt);
+break;
+case 2: obj.creatematrixD(s,key,row,column);
+obj.createkey(key,column);
+obj.decrypt(row,column);
+obj.resultD(row,column,obj.decrypt);
+break;
+}
+}
 }
